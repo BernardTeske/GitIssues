@@ -2,10 +2,16 @@
 
 # Funktion für das Öffnen eines neuen Branches
 open_ticket() {
-    # Frage nach der Ticketnummer
-    read -p "Bitte die Ticketnummer eingeben: " ticketnummer
+    # Überprüfe, ob eine Ticketnummer als Argument übergeben wurde
+    if [ -z "$1" ]; then
+        # Frage nach der Ticketnummer, wenn keine übergeben wurde
+        read -p "Bitte die Ticketnummer eingeben: " ticketnummer
+    else
+        # Nutze die übergebene Ticketnummer
+        ticketnummer="$1"
+    fi
 
-    # Erstelle den neuen Branch mit dem Namen "ticketname"
+    # Erstelle den neuen Branch mit dem Namen "ticketnummer"
     git checkout -b "$ticketnummer"
 }
 
@@ -21,6 +27,12 @@ close_ticket() {
 
 # Funktion für das Mergen eines Branches in main
 merge_main() {
+    # Überprüfe, ob ein Zielbranch als Argument übergeben wurde
+    if [ -z "$1" ]; then
+        echo "Fehler: Kein Zielbranch angegeben. Verwende: merge <Zielbranch>"
+        exit 1
+    fi
+
     # Hole den Namen des aktuellen Branches
     current_branch=$(git symbolic-ref --short HEAD)
 
@@ -31,7 +43,7 @@ merge_main() {
 
 # Prüfen, welcher Befehl übergeben wurde
 if [ "$1" == "open" ]; then
-    open_ticket
+    open_ticket "$2"
 elif [ "$1" == "close" ]; then
     close_ticket
 elif [ "$1" == "merge" ]; then
