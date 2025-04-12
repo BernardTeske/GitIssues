@@ -19,20 +19,14 @@ close_ticket() {
     ticket_number=$(git symbolic-ref --short HEAD)
 
     git add -A
-    git commit -m "close $ticket_number"
+    git commit -m "fix: $ticket_number"
     git push origin "$ticket_number"
+    git checkout next
+    git branch -d "$ticket_number"
 }
 
 merge_main() {
-    if [ -z "$1" ]; then
-        echo "Error: No target branch specified. Use: merge <target_branch>"
-        exit 1
-    fi
-
-    current_branch=$(git symbolic-ref --short HEAD)
-
-    git checkout "$1"
-    git merge "$current_branch"
+    echo "Dödöm: No merging in this Project!"
 }
 
 if [ "$1" == "open" ]; then
